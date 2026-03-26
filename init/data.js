@@ -1,0 +1,306 @@
+
+const sampleListings = [
+  {
+    title: "Vaishno Devi Yatra",
+    destination: "Jammu",
+    description: "7 days pilgrimage tour with Katra stay and Vaishno Devi darshan.",
+      images: [
+    "https://images.unsplash.com/photo-1582510003544-4d00b7f74220?auto=format&fit=crop&w=1200&q=80",
+    "https://images.unsplash.com/photo-1606402179428-a57976d71fa4?auto=format&fit=crop&w=1200&q=80",
+     "https://images.unsplash.com/photo-1582510003544-4d00b7f74220?auto=format&fit=crop&w=1200&q=80",
+    "https://images.unsplash.com/photo-1606402179428-a57976d71fa4?auto=format&fit=crop&w=1200&q=80"
+  ],
+    price: 12000,
+    startLocation: "Delhi",
+    endLocation: "Vaishno Devi",
+    travelMode: "Bus",
+    facilities: ["Hotel", "Darshan", "Meals"],
+    totalSeats: 40,
+    availableSeats: 40,
+    isActive: true,
+    country: "India"
+  },
+  {
+    title: "Tirupati Balaji Darshan",
+    destination: "Andhra Pradesh",
+    description: "5 days Tirupati Balaji darshan with hotel and special entry.",
+     images: [
+    "https://images.unsplash.com/photo-1582510003544-4d00b7f74220?auto=format&fit=crop&w=1200&q=80",
+    "https://images.unsplash.com/photo-1606402179428-a57976d71fa4?auto=format&fit=crop&w=1200&q=80",
+     "https://images.unsplash.com/photo-1582510003544-4d00b7f74220?auto=format&fit=crop&w=1200&q=80",
+    "https://images.unsplash.com/photo-1606402179428-a57976d71fa4?auto=format&fit=crop&w=1200&q=80"
+  ],
+    price: 15000,
+    startLocation: "Hyderabad",
+    endLocation: "Tirupati",
+    travelMode: "Bus",
+    facilities: ["Hotel", "Darshan", "Breakfast"],
+    totalSeats: 35,
+    availableSeats: 35,
+    isActive: true,
+    country: "India"
+  },
+  {
+    title: "Rameshwaram Yatra",
+    destination: "Tamil Nadu",
+    description: "6 days Rameshwaram temple darshan with sightseeing.",
+     images: [
+    "https://images.unsplash.com/photo-1582510003544-4d00b7f74220?auto=format&fit=crop&w=1200&q=80",
+    "https://images.unsplash.com/photo-1606402179428-a57976d71fa4?auto=format&fit=crop&w=1200&q=80",
+     "https://images.unsplash.com/photo-1582510003544-4d00b7f74220?auto=format&fit=crop&w=1200&q=80",
+    "https://images.unsplash.com/photo-1606402179428-a57976d71fa4?auto=format&fit=crop&w=1200&q=80"
+  ],
+    price: 18000,
+    startLocation: "Chennai",
+    endLocation: "Rameshwaram",
+    travelMode: "Train",
+    facilities: ["Hotel", "Darshan", "Meals"],
+    totalSeats: 30,
+    availableSeats: 30,
+    isActive: true,
+    country: "India"
+  },
+  {
+    title: "Mathura Vrindavan Yatra",
+    destination: "Uttar Pradesh",
+    description: "3 days Mathura & Vrindavan Krishna temple tour.",
+    images: [
+    "https://images.unsplash.com/photo-1582510003544-4d00b7f74220?auto=format&fit=crop&w=1200&q=80",
+    "https://images.unsplash.com/photo-1606402179428-a57976d71fa4?auto=format&fit=crop&w=1200&q=80",
+     "https://images.unsplash.com/photo-1582510003544-4d00b7f74220?auto=format&fit=crop&w=1200&q=80",
+    "https://images.unsplash.com/photo-1606402179428-a57976d71fa4?auto=format&fit=crop&w=1200&q=80"
+  ],
+    price: 8000,
+    startLocation: "Delhi",
+    endLocation: "Mathura & Vrindavan",
+    travelMode: "Bus",
+    facilities: ["Darshan", "Local Travel"],
+    totalSeats: 45,
+    availableSeats: 45,
+    isActive: true,
+    country: "India"
+  },
+  {
+    title: "Ayodhya Ram Mandir Yatra",
+    destination: "Uttar Pradesh",
+    description: "2 days Ayodhya Ram Mandir darshan.",
+    images: [
+    "https://images.unsplash.com/photo-1582510003544-4d00b7f74220?auto=format&fit=crop&w=1200&q=80",
+    "https://images.unsplash.com/photo-1606402179428-a57976d71fa4?auto=format&fit=crop&w=1200&q=80",
+     "https://images.unsplash.com/photo-1582510003544-4d00b7f74220?auto=format&fit=crop&w=1200&q=80",
+    "https://images.unsplash.com/photo-1606402179428-a57976d71fa4?auto=format&fit=crop&w=1200&q=80"
+  ],
+    price: 6000,
+    startLocation: "Lucknow",
+    endLocation: "Ayodhya",
+    travelMode: "Bus",
+    facilities: ["Darshan"],
+    totalSeats: 50,
+    availableSeats: 50,
+    isActive: true,
+    country: "India"
+  },
+  {
+    title: "Shirdi Sai Baba Yatra",
+    destination: "Maharashtra",
+    description: "3 days Shirdi Sai Baba darshan with local travel.",
+     images: [
+    "https://images.unsplash.com/photo-1582510003544-4d00b7f74220?auto=format&fit=crop&w=1200&q=80",
+    "https://images.unsplash.com/photo-1606402179428-a57976d71fa4?auto=format&fit=crop&w=1200&q=80",
+     "https://images.unsplash.com/photo-1582510003544-4d00b7f74220?auto=format&fit=crop&w=1200&q=80",
+    "https://images.unsplash.com/photo-1606402179428-a57976d71fa4?auto=format&fit=crop&w=1200&q=80"
+  ],
+    price: 9000,
+    startLocation: "Mumbai",
+    endLocation: "Shirdi",
+    travelMode: "Bus",
+    facilities: ["Hotel", "Darshan"],
+    totalSeats: 40,
+    availableSeats: 40,
+    isActive: true,
+    country: "India"
+  },
+  {
+    title: "Kashi Vishwanath Yatra",
+    destination: "Uttar Pradesh",
+    description: "4 days Varanasi Kashi Vishwanath temple darshan.",
+    images: [
+    "https://images.unsplash.com/photo-1582510003544-4d00b7f74220?auto=format&fit=crop&w=1200&q=80",
+    "https://images.unsplash.com/photo-1606402179428-a57976d71fa4?auto=format&fit=crop&w=1200&q=80",
+     "https://images.unsplash.com/photo-1582510003544-4d00b7f74220?auto=format&fit=crop&w=1200&q=80",
+    "https://images.unsplash.com/photo-1606402179428-a57976d71fa4?auto=format&fit=crop&w=1200&q=80"
+  ],
+    price: 11000,
+    startLocation: "Patna",
+    endLocation: "Varanasi",
+    travelMode: "Train",
+    facilities: ["Hotel", "Darshan"],
+    totalSeats: 35,
+    availableSeats: 35,
+    isActive: true,
+    country: "India"
+  },
+  {
+    title: "Haridwar Rishikesh Yatra",
+    destination: "Uttarakhand",
+    description: "3 days Haridwar & Rishikesh Ganga aarti tour.",
+    images: [
+    "https://images.unsplash.com/photo-1582510003544-4d00b7f74220?auto=format&fit=crop&w=1200&q=80",
+    "https://images.unsplash.com/photo-1606402179428-a57976d71fa4?auto=format&fit=crop&w=1200&q=80",
+     "https://images.unsplash.com/photo-1582510003544-4d00b7f74220?auto=format&fit=crop&w=1200&q=80",
+    "https://images.unsplash.com/photo-1606402179428-a57976d71fa4?auto=format&fit=crop&w=1200&q=80"
+  ],
+    price: 7000,
+    startLocation: "Delhi",
+    endLocation: "Haridwar & Rishikesh",
+    travelMode: "Bus",
+    facilities: ["Hotel", "Local Travel"],
+    totalSeats: 45,
+    availableSeats: 45,
+    isActive: true,
+    country: "India"
+  },
+
+  
+
+  {
+     title:"Badrinath Yatra", 
+    destination:"Uttarakhand", 
+    description:"8 days Badrinath dham yatra.", 
+    images: [
+    "https://images.unsplash.com/photo-1582510003544-4d00b7f74220?auto=format&fit=crop&w=1200&q=80",
+    "https://images.unsplash.com/photo-1606402179428-a57976d71fa4?auto=format&fit=crop&w=1200&q=80",
+     "https://images.unsplash.com/photo-1582510003544-4d00b7f74220?auto=format&fit=crop&w=1200&q=80",
+    "https://images.unsplash.com/photo-1606402179428-a57976d71fa4?auto=format&fit=crop&w=1200&q=80"
+  ],
+    price:26000, 
+    startLocation:"Haridwar", 
+    endLocation:"Badrinath", 
+    travelMode:"Bus", 
+    facilities:["Hotel","Darshan","Meals"], 
+    totalSeats:30, 
+    availableSeats:30, 
+    isActive:true, 
+    country:"India" 
+},
+
+  { 
+    title:"Kedarnath Yatra", 
+    destination:"Uttarakhand", 
+    description:"7 days Kedarnath temple yatra.", 
+     images: [
+    "https://images.unsplash.com/photo-1582510003544-4d00b7f74220?auto=format&fit=crop&w=1200&q=80",
+    "https://images.unsplash.com/photo-1606402179428-a57976d71fa4?auto=format&fit=crop&w=1200&q=80",
+     "https://images.unsplash.com/photo-1582510003544-4d00b7f74220?auto=format&fit=crop&w=1200&q=80",
+    "https://images.unsplash.com/photo-1606402179428-a57976d71fa4?auto=format&fit=crop&w=1200&q=80"
+  ],
+    price:28000, 
+    startLocation:"Haridwar", 
+    endLocation:"Kedarnath", 
+    travelMode:"Bus", 
+    facilities:["Hotel","Darshan"], 
+    totalSeats:25, availableSeats:25, 
+    isActive:true,
+    country:"India"
+ },
+
+  { title:"Somnath Dwarka Yatra",
+    destination:"Gujarat",
+    description:"6 days Somnath and Dwarka darshan.", 
+     images: [
+    "https://images.unsplash.com/photo-1582510003544-4d00b7f74220?auto=format&fit=crop&w=1200&q=80",
+    "https://images.unsplash.com/photo-1606402179428-a57976d71fa4?auto=format&fit=crop&w=1200&q=80",
+     "https://images.unsplash.com/photo-1582510003544-4d00b7f74220?auto=format&fit=crop&w=1200&q=80",
+    "https://images.unsplash.com/photo-1606402179428-a57976d71fa4?auto=format&fit=crop&w=1200&q=80"
+  ],
+    price:17000, 
+    startLocation:"Ahmedabad", 
+    endLocation:"Somnath & Dwarka", 
+    travelMode:"Bus", 
+    facilities:["Hotel","Darshan"], 
+    totalSeats:35, availableSeats:35, 
+    isActive:true, 
+    country:"India" },
+
+  { title:"Ujjain Mahakaleshwar Yatra", 
+    destination:"Madhya Pradesh", 
+    description:"2 days Mahakal temple darshan.", 
+    images: [
+    "https://images.unsplash.com/photo-1582510003544-4d00b7f74220?auto=format&fit=crop&w=1200&q=80",
+    "https://images.unsplash.com/photo-1606402179428-a57976d71fa4?auto=format&fit=crop&w=1200&q=80",
+     "https://images.unsplash.com/photo-1582510003544-4d00b7f74220?auto=format&fit=crop&w=1200&q=80",
+    "https://images.unsplash.com/photo-1606402179428-a57976d71fa4?auto=format&fit=crop&w=1200&q=80"
+  ],
+    price:6500, 
+    startLocation:"Indore", 
+    endLocation:"Ujjain", 
+    travelMode:"Bus", 
+    facilities:["Darshan"], 
+    totalSeats:50, 
+    availableSeats:50, 
+    isActive:true, 
+    country:"India" },
+
+  { title:"Amritsar Golden Temple Yatra", 
+    destination:"Punjab", 
+    description:"2 days Golden Temple visit.", 
+     images: [
+    "https://images.unsplash.com/photo-1582510003544-4d00b7f74220?auto=format&fit=crop&w=1200&q=80",
+    "https://images.unsplash.com/photo-1606402179428-a57976d71fa4?auto=format&fit=crop&w=1200&q=80",
+     "https://images.unsplash.com/photo-1582510003544-4d00b7f74220?auto=format&fit=crop&w=1200&q=80",
+    "https://images.unsplash.com/photo-1606402179428-a57976d71fa4?auto=format&fit=crop&w=1200&q=80"
+  ],
+    startLocation:"Delhi", 
+    endLocation:"Amritsar", 
+    travelMode:"Bus", 
+    facilities:["Darshan"], 
+    totalSeats:45, 
+    availableSeats:45, 
+    isActive:true, 
+    country:"India"
+ },
+
+  { title:"Ajmer Sharif Dargah Yatra", 
+    destination:"Rajasthan", 
+    description:"2 days Ajmer Sharif ziyarat.", 
+    images: [
+    "https://images.unsplash.com/photo-1582510003544-4d00b7f74220?auto=format&fit=crop&w=1200&q=80",
+    "https://images.unsplash.com/photo-1606402179428-a57976d71fa4?auto=format&fit=crop&w=1200&q=80",
+     "https://images.unsplash.com/photo-1582510003544-4d00b7f74220?auto=format&fit=crop&w=1200&q=80",
+    "https://images.unsplash.com/photo-1606402179428-a57976d71fa4?auto=format&fit=crop&w=1200&q=80"
+  ],
+    price:5500, 
+    startLocation:"Jaipur", 
+    endLocation:"Ajmer", 
+    travelMode:"Bus", 
+    facilities:["Darshan"], 
+    totalSeats:50, 
+    availableSeats:50, 
+    isActive:true, 
+    country:"India"
+ },
+
+  { title:"Gangotri Yamunotri Yatra", 
+    destination:"Uttarakhand", 
+    description:"6 days Gangotri & Yamunotri yatra.",
+     images: [
+    "https://images.unsplash.com/photo-1582510003544-4d00b7f74220?auto=format&fit=crop&w=1200&q=80",
+    "https://images.unsplash.com/photo-1606402179428-a57976d71fa4?auto=format&fit=crop&w=1200&q=80",
+     "https://images.unsplash.com/photo-1582510003544-4d00b7f74220?auto=format&fit=crop&w=1200&q=80",
+    "https://images.unsplash.com/photo-1606402179428-a57976d71fa4?auto=format&fit=crop&w=1200&q=80"
+  ],
+    price:24000, 
+    startLocation:"Haridwar", 
+    endLocation:"Gangotri & Yamunotri", 
+    travelMode:"Bus", 
+    facilities:["Hotel","Darshan","Meals"], 
+    totalSeats:28, 
+    availableSeats:28, 
+    isActive:true, 
+    country:"India" 
+}
+];
+
+module.exports = {
+    data: sampleListings
+};

@@ -1,0 +1,107 @@
+<% layout("layouts/boilerplate") %>
+
+<%
+  const bookingImage = listing && Array.isArray(listing.images) && listing.images.length > 0
+    ? (typeof listing.images[0] === "string" ? listing.images[0] : listing.images[0].url)
+    : "https://via.placeholder.com/800x500?text=No+Image";
+%>
+
+<div class="container mt-5">
+  <div class="row g-4">
+
+    <!-- LEFT SIDE -->
+    <div class="col-md-7 mb-3">
+      <div class="card border-0 shadow-sm booking-image">
+        <img 
+          src="<%= bookingImage %>" 
+          alt="<%= listing.title %>"
+          class="img-fluid rounded-top"
+        >
+
+        <div class="p-3">
+          <h3><%= listing.title %></h3>
+
+          <p class="text-muted mb-1">
+            📍 <%= listing.location %>
+          </p>
+
+          <h5 class="text-success">
+            ₹ <%= listing.price %> / person
+          </h5>
+
+          <span class="badge bg-success mt-2">
+            Seats Left: <%= listing.availableSeats %> / <%= listing.totalSeats %>
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT SIDE FORM -->
+    <div class="col-md-5">
+      <div class="card shadow p-4 position-relative">
+
+        <h4 class="mb-4 text-center">Book This Package</h4>
+
+        <form action="/listings/<%= listing._id %>/book" method="POST">
+
+          <!-- NAME -->
+          <div class="mb-3">
+            <label class="form-label">Name</label>
+            <input 
+              type="text" 
+              name="name" 
+              class="form-control" 
+              placeholder="Enter your name"
+              required
+            >
+          </div>
+
+          <!-- PHONE -->
+          <div class="mb-3">
+            <label class="form-label">Phone</label>
+            <input 
+              type="text" 
+              name="phone" 
+              class="form-control" 
+              placeholder="Enter phone number"
+              required
+            >
+          </div>
+
+          <!-- PERSONS -->
+          <div class="mb-3">
+            <label class="form-label">Persons</label>
+            <input 
+              type="number" 
+              name="seats"
+              class="form-control"
+              min="1"
+              max="<%= listing.availableSeats && listing.availableSeats > 0 ? listing.availableSeats : 1 %>"
+              placeholder="Enter number of seats"
+              required
+            >
+          </div>
+
+          <!-- DATE -->
+          <div class="mb-3">
+            <label class="form-label">Travel Date</label>
+            <input 
+              type="date"
+              name="date"
+              class="form-control"
+              min="<%= new Date().toISOString().split('T')[0] %>"
+              required
+            >
+          </div>
+
+          <button class="btn btn-primary w-100">
+            Confirm Booking
+          </button>
+
+        </form>
+
+      </div>
+    </div>
+
+  </div>
+</div>

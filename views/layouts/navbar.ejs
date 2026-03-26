@@ -1,0 +1,89 @@
+<nav class="navbar-divine">
+  <div class="container-fluid">
+    <div class="navbar-content">
+      <!-- Logo/Brand -->
+      <div class="navbar-brand">
+        <a href="/" class="logo-link">
+          <span class="logo-icon">✈️</span>
+          <span class="logo-text">Divine Destination</span>
+        </a>
+      </div>
+
+      <!-- Navigation Links -->
+      <div class="navbar-menu">
+        <a href="/" class="nav-link">Home</a>
+        <a href="/listings" class="nav-link">Explore</a>
+
+        <% if (!currentUser) { %>
+          <a href="/login" class="nav-link">Login</a>
+          <a href="/register" class="nav-link nav-register">Register</a>
+        <% } else { %>
+          <% if (currentUser.role === "admin") { %>
+            <a href="/listings/new" class="nav-link">Add Listing</a>
+          <% } else { %>
+            <a href="/bookings" class="nav-link">My Bookings</a>
+          <% } %>
+          <a href="/logout" class="nav-link nav-logout">Logout</a>
+        <% } %>
+      </div>
+
+      <!-- Mobile Menu Toggle -->
+      <button class="mobile-menu-toggle" id="mobileMenuToggle">
+        <span class="hamburger-line"></span>
+        <span class="hamburger-line"></span>
+        <span class="hamburger-line"></span>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- Flash Messages -->
+<div class="flash-messages">
+  <% if(success) { %>
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+      <strong>Success!</strong> <%= success %>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+  <% } %>
+
+  <% if(error) { %>
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+      <strong>Error!</strong> <%= error %>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+  <% } %>
+</div>
+
+<script>
+// Mobile Menu Toggle
+document.addEventListener('DOMContentLoaded', function() {
+  const toggle = document.getElementById('mobileMenuToggle');
+  const menu = document.querySelector('.navbar-menu');
+  
+  if (toggle && menu) {
+    toggle.addEventListener('click', function() {
+      menu.classList.toggle('active');
+      this.classList.toggle('active');
+    });
+
+    // Close menu when link is clicked
+    const navLinks = menu.querySelectorAll('.nav-link');
+    navLinks.forEach(link => {
+      link.addEventListener('click', function() {
+        menu.classList.remove('active');
+        toggle.classList.remove('active');
+      });
+    });
+  }
+
+  // Navbar scroll effect (optional: turn solid on scroll)
+  const navbar = document.querySelector('.navbar-divine');
+  window.addEventListener('scroll', function() {
+    if (window.scrollY > 50) {
+      navbar.classList.add('scrolled');
+    } else {
+      navbar.classList.remove('scrolled');
+    }
+  });
+});
+</script>

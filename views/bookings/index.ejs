@@ -1,0 +1,58 @@
+<% layout("layouts/boilerplate") %>
+
+<div class="container mt-5">
+
+<h2 class="mb-4">My Bookings</h2>
+
+<% if(bookings.length === 0){ %>
+
+  <p>No bookings yet 😔</p>
+
+<% } else { %>
+
+  <div class="row">
+
+    <% bookings.forEach(b => { %>
+      <% 
+        const bookingListing = b.listing || null;
+        const bookingImage = bookingListing && Array.isArray(bookingListing.images) && bookingListing.images.length > 0
+          ? (typeof bookingListing.images[0] === "string" ? bookingListing.images[0] : bookingListing.images[0].url)
+          : "https://via.placeholder.com/400x250?text=No+Image";
+      %>
+
+      <div class="col-md-4 mb-4">
+        <div class="card shadow-sm">
+
+          <img 
+            src="<%= bookingImage %>" 
+            alt="<%= bookingListing ? bookingListing.title : 'Booking image' %>"
+            class="card-img-top"
+            style="height:200px; object-fit:cover;"
+          >
+
+          <div class="card-body">
+
+            <h5 class="card-title">
+              <%= bookingListing ? bookingListing.title : "Listing unavailable" %>
+            </h5>
+
+            <p>👤 <strong>Name:</strong> <%= b.name %></p>
+            <p>📞 <strong>Phone:</strong> <%= b.phone %></p>
+            <p>👥 <strong>Seats:</strong> <%= b.seats %></p>
+
+            <p>📅 <strong>Date:</strong> 
+              <%= new Date(b.travelDate).toDateString() %>
+            </p>
+
+          </div>
+
+        </div>
+      </div>
+
+    <% }) %>
+
+  </div>
+
+<% } %>
+
+</div>

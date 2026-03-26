@@ -1,0 +1,60 @@
+<% layout("layouts/boilerplate") %>
+
+<div class="auth-container container">
+
+<div class="row justify-content-center align-items-center">
+
+<div class="col-md-8 col-lg-6">
+
+<div class="auth-card shadow-sm rounded">
+  <h2 class="auth-title text-center">Login</h2>
+
+  <form action="/login" method="POST">
+
+<div class="mb-3">
+<label class="form-label">Email</label>
+<input 
+  type="email" 
+  name="email" 
+  class="form-control" 
+  placeholder="Enter your email"
+  required
+  pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
+  title="Enter a valid email address"
+>
+</div>
+
+<div class="mb-3">
+<label class="form-label" for="loginPassword">Password</label>
+<div class="password-wrapper">
+  <input 
+    id="loginPassword" 
+    type="password" 
+    name="password" 
+    class="form-control" 
+    placeholder="Enter your password"
+    required
+    minlength="8"
+    pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).{8,}"
+    title="8+ characters, upper/lowercase, number and special character"
+  >
+  <span class="toggle-password" data-target="loginPassword" role="button" tabindex="0" aria-label="Show password" aria-pressed="false">👁️</span>
+</div>
+</div>
+
+<button class="btn btn-primary w-100 mt-3">
+Login
+</button>
+
+<p class="text-center mt-3">
+Don't have an account?
+<a href="/register">Register</a>
+</p>
+
+</form>
+
+</div>
+
+</div>
+
+</div>
