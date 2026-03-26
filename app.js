@@ -51,7 +51,7 @@ if (isProduction) {
 }
 
 if (!mongoSessionUrl) {
-  throw new Error("Missing MongoDB session connection string. Set MONGO_URI in your environment.");
+  throw new Error("Missing MongoDB session connection string. Set MONGO_URI or MONGO_URL in your environment.");
 }
 
 if (!sessionSecret) {

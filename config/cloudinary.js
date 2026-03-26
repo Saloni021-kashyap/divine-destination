@@ -6,8 +6,14 @@ const apiKey = process.env.CLOUDINARY_KEY;
 const apiSecret = process.env.CLOUDINARY_SECRET;
 
 if (!cloudName || !apiKey || !apiSecret) {
+  const missingVars = [
+    !cloudName ? "CLOUDINARY_CLOUD_NAME" : null,
+    !apiKey ? "CLOUDINARY_KEY" : null,
+    !apiSecret ? "CLOUDINARY_SECRET" : null,
+  ].filter(Boolean);
+
   console.warn(
-    "Cloudinary not fully configured. Please set CLOUDINARY_CLOUD_NAME, CLOUDINARY_KEY and CLOUDINARY_SECRET."
+    `Cloudinary not fully configured. Missing: ${missingVars.join(", ")}`
   );
 } else {
   cloudinary.config({
