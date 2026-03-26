@@ -24,13 +24,9 @@ const bookingRoutes = require("./routes/bookingRoutes");
 const app = express();
 const isProduction = process.env.NODE_ENV === "production";
 const mongoSessionUrl = process.env.MONGO_URI || process.env.MONGO_URL;
+const sessionSecret = process.env.SESSION_SECRET;
 
 // const dbUrl = process.env.MONGO_URL;
-
-// =============================
-// Database Connect
-// =============================
-connectDB();
 
 // =============================
 // View Engine Setup
@@ -58,18 +54,29 @@ if (!mongoSessionUrl) {
   throw new Error("Missing MongoDB session connection string. Set MONGO_URI in your environment.");
 }
 
+if (!sessionSecret) {
+  throw new Error("Missing SESSION_SECRET in environment.");
+}
+
+const sessionStore = MongoStore.create({
+  mongoUrl: mongoSessionUrl,
+  collectionName: "sessions",
+  ttl: 14 * 24 * 60 * 60,
+  autoRemove: "native",
+});
+
+sessionStore.on("error", err => {
+  console.error("Session store error:", err.message);
+});
+
 app.use(
   session({
-    secret: process.env.SESSION_SECRET || "divineSecretKey",
+    secret: sessionSecret,
     name: "divine.sid",
     resave: false,
     saveUninitialized: false,
-    store: MongoStore.create({
-      mongoUrl: mongoSessionUrl,
-      collectionName: "sessions",
-      ttl: 14 * 24 * 60 * 60,
-      autoRemove: "native"
-    }),
+    rolling: true,
+    store: sessionStore,
     cookie: {
       httpOnly: true,
       secure: isProduction,
@@ -134,7 +141,35 @@ app.use((err, req, res, next) => {
 // Server Start
 // =============================
 const PORT = process.env.PORT || 3000;
+let server;
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT} 🚀`);
+process.on("unhandledRejection", err => {
+  console.error("Unhandled promise rejection:", err);
 });
+
+process.on("uncaughtException", err => {
+  console.error("Uncaught exception:", err);
+  process.exit(1);
+});
+
+const startServer = async () => {
+  try {
+    await connectDB();
+    server = app.listen(PORT, () => {
+      console.log(`Server running on port ${PORT}`);
+    });
+  } catch (err) {
+    console.error("Startup error:", err.message);
+    process.exit(1);
+  }
+};
+
+process.on("SIGTERM", () => {
+  if (server) {
+    server.close(() => process.exit(0));
+  } else {
+    process.exit(0);
+  }
+});
+
+startServer();

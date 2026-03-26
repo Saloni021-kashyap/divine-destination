@@ -22,7 +22,8 @@ min:0
 
 description:{
 type:String,
-trim:true
+trim:true,
+default:""
 },
 
 // Travel Mode (Bus / Train / Flight)
@@ -46,7 +47,7 @@ images: {
 totalSeats: {
   type: Number,
   default: 40,
-  min: 0
+  min: 1
 },
 
 availableSeats: {

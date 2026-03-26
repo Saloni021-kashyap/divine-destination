@@ -23,7 +23,7 @@ exports.dashboard = async (req, res) => {
 
   } catch (err) {
 
-    console.log("Admin Dashboard Error:", err);
+    console.error("Admin Dashboard Error:", err.message);
     res.send("Error loading dashboard");
 
   }

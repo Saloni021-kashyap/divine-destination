@@ -334,50 +334,6 @@ exports.bookingForm = async (req, res) => {
   }
 };
 
-// =============================
-// 🔟 Book Seat
-// =============================
-exports.bookSeat = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const { numSeats } = req.body;
-
-    const listing = await Listing.findById(id);
-    if (!listing) {
-      req.session.error = "Listing not found";
-      return res.redirect("/listings");
-    }
-
-    const seats = Number(numSeats) || 1;
-
-    if (seats <= 0 || seats > listing.availableSeats) {
-      req.session.error = "Invalid number of seats";
-      return res.redirect(`/listings/${id}/book`);
-    }
-
-    const booking = new Booking({
-      user: req.user._id,
-      listing: id,
-      numSeats: seats,
-      totalPrice: seats * listing.price,
-      bookingDate: new Date()
-    });
-
-    await booking.save();
-
-    listing.availableSeats -= seats;
-    await listing.save();
-
-    req.session.success = "Booking confirmed!";
-    res.redirect("/bookings");
-
-  } catch (err) {
-    console.error("Book Seat Error:", err.message);
-    req.session.error = "Error processing booking";
-    res.redirect("/listings");
-  }
-};
-
 exports.bookSeat = async (req, res) => {
   try {
     const { id } = req.params;
@@ -387,6 +343,11 @@ exports.bookSeat = async (req, res) => {
 
     const today = new Date();
     today.setHours(0,0,0,0);
+
+    if (Number.isNaN(travelDate.getTime())) {
+      req.session.error = "Please select a valid travel date";
+      return res.redirect(`/listings/${id}/book`);
+    }
 
     if (travelDate < today) {
       req.session.error = "Travel date cannot be in the past";
@@ -400,7 +361,7 @@ exports.bookSeat = async (req, res) => {
       return res.redirect("/listings");
     }
 
-    if (seats <= 0) {
+    if (!Number.isInteger(seats) || seats <= 0) {
       req.session.error = "Invalid seat number";
       return res.redirect(`/listings/${id}/book`);
     }
@@ -424,34 +385,13 @@ exports.bookSeat = async (req, res) => {
       seats: seats,
       travelDate: travelDate
     });
-    req.session.success = "Booking successful 🎉";
+    req.session.success = "Booking successful";
 
     res.redirect(`/listings/${id}`);
 
   } catch (err) {
-    console.log("Booking Error:", err);
-    res.redirect("/listings");
-  }
-};
-
-// =============================
-// 9️⃣ Delete Listing
-// =============================
-exports.deleteListing = async (req, res) => {
-
-  try {
-
-    const { id } = req.params;
-
-    await Listing.findByIdAndDelete(id);
-
-    req.session.success = "Listing deleted successfully";
-
-    res.redirect("/listings");
-
-  } catch (err) {
-    console.error("Delete Error:", err.message);
-    req.session.error = "Error deleting listing";
+    console.error("Booking Error:", err.message);
+    req.session.error = "Unable to complete booking";
     res.redirect("/listings");
   }
 };

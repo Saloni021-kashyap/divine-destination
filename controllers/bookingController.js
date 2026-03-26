@@ -12,20 +12,30 @@ exports.cancelBooking = async (req, res) => {
       return res.redirect("/bookings");
     }
 
-    // 🔥 Seats wapas add karo
+    const isAdmin = req.session.user && req.session.user.role === "admin";
+    const isOwner =
+      booking.user &&
+      req.session.user &&
+      booking.user.toString() === req.session.user.id;
+
+    if (!isAdmin && !isOwner) {
+      req.session.error = "You are not allowed to cancel this booking";
+      return res.redirect("/bookings");
+    }
+
     await Listing.findByIdAndUpdate(booking.listing, {
       $inc: { availableSeats: booking.seats }
     });
 
-    // 🔥 Booking delete karo
     await Booking.findByIdAndDelete(id);
 
-    req.session.success = "Booking cancelled successfully ❌";
+    req.session.success = "Booking cancelled successfully";
 
     res.redirect("/bookings");
 
   } catch (err) {
     console.error("Booking Controller Error:", err.message);
+    req.session.error = "Unable to cancel booking";
     res.redirect("/bookings");
   }
 };
