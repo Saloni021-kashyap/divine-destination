@@ -1,7 +1,16 @@
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", () => {
+  initLegacySliders();
+  initPasswordToggles();
+  initNavbarMenu();
+  initSeatInputGuard();
+  initImagePreviews();
+  initImageSlider();
+});
 
+function initLegacySliders() {
   document.querySelectorAll(".slider").forEach(slider => {
-    let images = slider.querySelectorAll("img");
+    const images = slider.querySelectorAll("img");
+    const dots = slider.querySelectorAll(".dot");
 
     if (images.length <= 1) return;
 
@@ -9,12 +18,17 @@ document.addEventListener("DOMContentLoaded", function () {
 
     setInterval(() => {
       images[index].classList.remove("active");
-      index = (index + 1) % images.length;
-      images[index].classList.add("active");
-    }, 2500);
-  });
+      if (dots[index]) dots[index].classList.remove("active-dot");
 
-  // Password show/hide toggle for auth pages
+      index = (index + 1) % images.length;
+
+      images[index].classList.add("active");
+      if (dots[index]) dots[index].classList.add("active-dot");
+    }, 3000);
+  });
+}
+
+function initPasswordToggles() {
   document.querySelectorAll(".toggle-password").forEach(toggle => {
     const togglePassword = () => {
       const targetId = toggle.getAttribute("data-target");
@@ -36,99 +50,142 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     });
   });
-
-});
-
-function confirmDelete(){
-
-  Swal.fire({
-    title: "Are you sure?",
-    text: "This listing will be permanently deleted!",
-    icon: "warning",
-    showCancelButton: true,
-    confirmButtonColor: "#d33",
-    cancelButtonColor: "#3085d6",
-    confirmButtonText: "Yes, delete it!",
-    cancelButtonText: "Cancel"
-  }).then((result) => {
-
-    if (result.isConfirmed) {
-
-      document.getElementById("deleteForm").submit();
-
-    }
-
-  });
-
 }
 
-document.querySelectorAll(".slider").forEach(slider => {
+function initNavbarMenu() {
+  const toggle = document.getElementById("mobileMenuToggle");
+  const menu = document.getElementById("navbarMenu");
+  const navbar = document.querySelector(".navbar-divine");
 
-  const images = slider.querySelectorAll("img");
-  const dots = slider.querySelectorAll(".dot");
+  if (toggle && menu) {
+    const closeMenu = () => {
+      menu.classList.remove("active");
+      toggle.classList.remove("active");
+      toggle.setAttribute("aria-expanded", "false");
+    };
 
-  let index = 0;
+    toggle.addEventListener("click", () => {
+      const isActive = menu.classList.toggle("active");
+      toggle.classList.toggle("active", isActive);
+      toggle.setAttribute("aria-expanded", String(isActive));
+    });
 
-  if(images.length <= 1) return;
+    menu.querySelectorAll(".nav-link").forEach(link => {
+      link.addEventListener("click", closeMenu);
+    });
 
-  setInterval(()=>{
-
-    images[index].classList.remove("active");
-    dots[index].classList.remove("active-dot");
-
-    index = (index + 1) % images.length;
-
-    images[index].classList.add("active");
-    dots[index].classList.add("active-dot");
-
-  },3000);
-
-});
-// =============================
-// Booking Success Popup
-// =============================
-
-document.addEventListener("DOMContentLoaded", () => {
-
-  const seatsInput = document.querySelector("input[name='seats']");
-
-  if (seatsInput) {
-    seatsInput.addEventListener("input", function () {
-      let max = this.max || 100; // fallback
-
-      if (Number(this.value) > Number(max)) {
-        this.value = max;
+    window.addEventListener("resize", () => {
+      if (window.innerWidth >= 768) {
+        closeMenu();
       }
     });
   }
 
-});
+  if (navbar) {
+    const syncScrolledState = () => {
+      navbar.classList.toggle("scrolled", window.scrollY > 50);
+    };
 
-
-document.querySelector("input[name='seats']").addEventListener("input", function(){
-  let max = this.max;
-  if(this.value > max){
-    this.value = max;
+    syncScrolledState();
+    window.addEventListener("scroll", syncScrolledState);
   }
-});
-
-
-function confirmDelete() {
-
-Swal.fire({
-title: "Delete Listing?",
-text: "You won't be able to recover this listing!",
-icon: "warning",
-showCancelButton: true,
-confirmButtonColor: "#d33",
-cancelButtonColor: "#3085d6",
-confirmButtonText: "Yes, delete it!"
-}).then((result) => {
-
-if (result.isConfirmed) {
-document.getElementById("deleteForm").submit();
 }
 
-});
+function initSeatInputGuard() {
+  const seatsInput = document.querySelector("input[name='seats']");
+  if (!seatsInput) return;
 
+  seatsInput.addEventListener("input", function () {
+    const max = Number(this.max) || 100;
+    if (Number(this.value) > max) {
+      this.value = max;
+    }
+  });
+}
+
+function initImagePreviews() {
+  document.querySelectorAll(".image-preview-input").forEach(input => {
+    const previewTargetId = input.getAttribute("data-preview-target");
+    const previewContainer = previewTargetId ? document.getElementById(previewTargetId) : null;
+    if (!previewContainer) return;
+
+    input.addEventListener("change", () => {
+      previewContainer.innerHTML = "";
+
+      Array.from(input.files || []).forEach((file, index) => {
+        if (!file.type.startsWith("image/")) return;
+
+        const reader = new FileReader();
+        reader.onload = event => {
+          const previewItem = document.createElement("div");
+          previewItem.className = "image-preview-item";
+          previewItem.innerHTML = `
+            <img src="${event.target.result}" alt="Preview ${index + 1}">
+          `;
+          previewContainer.appendChild(previewItem);
+        };
+        reader.readAsDataURL(file);
+      });
+    });
+  });
+}
+
+function initImageSlider() {
+  document.querySelectorAll("[data-image-slider]").forEach(slider => {
+    const slides = Array.from(slider.querySelectorAll(".slide"));
+    const indicators = Array.from(slider.querySelectorAll(".indicator"));
+    const currentCounter = slider.querySelector("[data-current-slide]");
+
+    if (slides.length <= 1) return;
+
+    let currentIndex = 0;
+
+    const renderSlide = nextIndex => {
+      currentIndex = (nextIndex + slides.length) % slides.length;
+
+      slides.forEach((slide, index) => {
+        slide.classList.toggle("active", index === currentIndex);
+      });
+
+      indicators.forEach((indicator, index) => {
+        indicator.classList.toggle("active", index === currentIndex);
+      });
+
+      if (currentCounter) {
+        currentCounter.textContent = String(currentIndex + 1);
+      }
+    };
+
+    slider.querySelectorAll("[data-slide-dir]").forEach(button => {
+      button.addEventListener("click", () => {
+        const direction = Number(button.getAttribute("data-slide-dir")) || 0;
+        renderSlide(currentIndex + direction);
+      });
+    });
+
+    indicators.forEach((indicator, index) => {
+      indicator.addEventListener("click", () => renderSlide(index));
+    });
+
+    document.addEventListener("keydown", event => {
+      if (event.key === "ArrowLeft") renderSlide(currentIndex - 1);
+      if (event.key === "ArrowRight") renderSlide(currentIndex + 1);
+    });
+  });
+}
+
+function confirmDelete() {
+  Swal.fire({
+    title: "Delete Listing?",
+    text: "You won't be able to recover this listing!",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#d33",
+    cancelButtonColor: "#3085d6",
+    confirmButtonText: "Yes, delete it!"
+  }).then(result => {
+    if (result.isConfirmed) {
+      document.getElementById("deleteForm")?.submit();
+    }
+  });
 }

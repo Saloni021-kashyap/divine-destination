@@ -1,7 +1,6 @@
 <nav class="navbar-divine">
   <div class="container-fluid">
     <div class="navbar-content">
-      <!-- Logo/Brand -->
       <div class="navbar-brand">
         <a href="/" class="logo-link">
           <span class="logo-icon">✈️</span>
@@ -9,8 +8,7 @@
         </a>
       </div>
 
-      <!-- Navigation Links -->
-      <div class="navbar-menu">
+      <div class="navbar-menu" id="navbarMenu">
         <a href="/" class="nav-link">Home</a>
         <a href="/listings" class="nav-link">Explore</a>
 
@@ -27,8 +25,7 @@
         <% } %>
       </div>
 
-      <!-- Mobile Menu Toggle -->
-      <button class="mobile-menu-toggle" id="mobileMenuToggle">
+      <button class="mobile-menu-toggle" id="mobileMenuToggle" type="button" aria-label="Toggle navigation" aria-expanded="false" aria-controls="navbarMenu">
         <span class="hamburger-line"></span>
         <span class="hamburger-line"></span>
         <span class="hamburger-line"></span>
@@ -37,7 +34,6 @@
   </div>
 </nav>
 
-<!-- Flash Messages -->
 <div class="flash-messages">
   <% if(success) { %>
     <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -53,37 +49,3 @@
     </div>
   <% } %>
 </div>
-
-<script>
-// Mobile Menu Toggle
-document.addEventListener('DOMContentLoaded', function() {
-  const toggle = document.getElementById('mobileMenuToggle');
-  const menu = document.querySelector('.navbar-menu');
-  
-  if (toggle && menu) {
-    toggle.addEventListener('click', function() {
-      menu.classList.toggle('active');
-      this.classList.toggle('active');
-    });
-
-    // Close menu when link is clicked
-    const navLinks = menu.querySelectorAll('.nav-link');
-    navLinks.forEach(link => {
-      link.addEventListener('click', function() {
-        menu.classList.remove('active');
-        toggle.classList.remove('active');
-      });
-    });
-  }
-
-  // Navbar scroll effect (optional: turn solid on scroll)
-  const navbar = document.querySelector('.navbar-divine');
-  window.addEventListener('scroll', function() {
-    if (window.scrollY > 50) {
-      navbar.classList.add('scrolled');
-    } else {
-      navbar.classList.remove('scrolled');
-    }
-  });
-});
-</script>

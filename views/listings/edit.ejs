@@ -3,40 +3,34 @@
 <div class="container mt-5">
   <div class="row justify-content-center">
     <div class="col-lg-8">
-      <div class="form-card">
+      <div class="form-card listing-form-card">
         <h2 class="mb-4">Edit Travel Listing</h2>
 
         <form action="/listings/<%= listing._id %>?_method=PUT" method="POST" enctype="multipart/form-data" id="editForm">
-
-          <!-- Trip Title -->
           <div class="mb-3">
             <label for="title" class="form-label">Trip Title</label>
             <input type="text" id="title" name="title" value="<%= listing.title %>" class="form-control" required>
           </div>
 
-          <!-- Location -->
           <div class="mb-3">
             <label for="location" class="form-label">Location</label>
             <input type="text" id="location" name="location" value="<%= listing.location %>" class="form-control" required>
           </div>
 
-          <!-- Travel Mode -->
           <div class="mb-3">
             <label for="travelMode" class="form-label">Travel Mode</label>
             <select id="travelMode" name="travelMode" class="form-control">
-              <option value="Bus" <%= listing.travelMode === "Bus" ? "selected" : "" %>>🚌 Bus</option>
-              <option value="Train" <%= listing.travelMode === "Train" ? "selected" : "" %>>🚆 Train</option>
-              <option value="Flight" <%= listing.travelMode === "Flight" ? "selected" : "" %>>✈️ Flight</option>
+              <option value="Bus" <%= listing.travelMode === "Bus" ? "selected" : "" %>>Bus</option>
+              <option value="Train" <%= listing.travelMode === "Train" ? "selected" : "" %>>Train</option>
+              <option value="Flight" <%= listing.travelMode === "Flight" ? "selected" : "" %>>Flight</option>
             </select>
           </div>
 
-          <!-- Price -->
           <div class="mb-3">
             <label for="price" class="form-label">Price (per person)</label>
             <input type="number" id="price" name="price" value="<%= listing.price %>" class="form-control" min="0" required>
           </div>
 
-          <!-- Total Seats -->
           <div class="mb-3">
             <label for="totalSeats" class="form-label">Total Seats</label>
             <input type="number" id="totalSeats" name="totalSeats" value="<%= listing.totalSeats %>" class="form-control" min="1">
@@ -46,13 +40,11 @@
             <strong>Available Seats:</strong> <%= listing.availableSeats || listing.totalSeats %>
           </div>
 
-          <!-- Description -->
           <div class="mb-3">
             <label for="description" class="form-label">Description</label>
-            <textarea id="description" name="description" class="form-control" rows="4"><%= listing.description || '' %></textarea>
+            <textarea id="description" name="description" class="form-control" rows="4"><%= listing.description || "" %></textarea>
           </div>
 
-          <!-- Current Images -->
           <% if (listing.images && listing.images.length > 0) { %>
             <div class="mb-4">
               <h5 class="mb-3">Current Images (<%= listing.images.length %>)</h5>
@@ -60,195 +52,37 @@
                 <% listing.images.forEach((img, index) => { %>
                   <div class="current-image-item">
                     <img src="<%= img.url || img %>" alt="Listing image <%= index + 1 %>" class="current-image">
-                    <div class="image-info"><%= img.filename || 'uploaded.jpg' %></div>
+                    <div class="image-info"><%= img.filename || "uploaded.jpg" %></div>
                   </div>
                 <% }) %>
               </div>
             </div>
           <% } %>
 
-          <!-- Upload New Images -->
           <div class="mb-3">
             <label for="newImages" class="form-label">Add More Images (Optional)</label>
             <div class="upload-area">
-              <input type="file" id="newImages" name="images" class="form-control" multiple accept="image/*">
-              <small class="form-text text-muted d-block mt-2">Upload additional images or leave empty to keep current images</small>
+              <input
+                type="file"
+                id="newImages"
+                name="images"
+                class="form-control image-preview-input"
+                data-preview-target="newImagePreview"
+                multiple
+                accept="image/*"
+              >
+              <small class="form-text text-muted d-block mt-2">Upload additional images or leave empty to keep current images.</small>
             </div>
           </div>
 
-          <!-- New Image Preview -->
-          <div id="newImagePreview" class="mb-4"></div>
+          <div id="newImagePreview" class="image-preview-grid mb-4"></div>
 
-          <!-- Submit Buttons -->
           <div class="btn-group-vertical w-100">
             <button type="submit" class="btn btn-primary btn-lg">Update Listing</button>
             <a href="/listings/<%= listing._id %>" class="btn btn-outline-secondary btn-lg mt-2">Cancel</a>
           </div>
-
         </form>
       </div>
     </div>
   </div>
 </div>
-
-<style>
-.form-card {
-  background: white;
-  border-radius: 12px;
-  padding: 2rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-}
-
-.form-label {
-  font-weight: 600;
-  color: #333;
-  margin-bottom: 0.5rem;
-}
-
-.form-control {
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  padding: 0.75rem;
-  transition: all 0.3s;
-}
-
-.form-control:focus {
-  border-color: #0066ff;
-  box-shadow: 0 0 0 3px rgba(0, 102, 255, 0.1);
-  outline: none;
-}
-
-.upload-area {
-  border: 2px dashed #ddd;
-  border-radius: 8px;
-  padding: 2rem;
-  text-align: center;
-  cursor: pointer;
-  transition: all 0.3s;
-}
-
-.upload-area:hover {
-  border-color: #0066ff;
-  background-color: rgba(0, 102, 255, 0.05);
-}
-
-.upload-area input {
-  border: none !important;
-  padding: 0 !important;
-  box-shadow: none !important;
-}
-
-.current-images-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-  gap: 1rem;
-  margin-bottom: 1rem;
-}
-
-.current-image-item {
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  background: #f5f5f5;
-}
-
-.current-image {
-  width: 100%;
-  height: 120px;
-  object-fit: cover;
-  display: block;
-}
-
-.image-info {
-  padding: 0.5rem;
-  font-size: 0.75rem;
-  color: #666;
-  text-align: center;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-#newImagePreview {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-  gap: 1rem;
-}
-
-.image-preview-item {
-  position: relative;
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-.image-preview-item img {
-  width: 100%;
-  height: 150px;
-  object-fit: cover;
-  display: block;
-}
-
-.image-preview-item .remove-btn {
-  position: absolute;
-  top: 4px;
-  right: 4px;
-  background: rgba(255, 53, 84, 0.9);
-  color: white;
-  border: none;
-  border-radius: 50%;
-  width: 28px;
-  height: 28px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 16px;
-  transition: all 0.2s;
-}
-
-.image-preview-item .remove-btn:hover {
-  background: rgba(255, 53, 84, 1);
-  transform: scale(1.1);
-}
-
-.btn-group-vertical {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-</style>
-
-<script>
-const newImageInput = document.getElementById('newImages');
-const newImagePreview = document.getElementById('newImagePreview');
-
-newImageInput.addEventListener('change', function(e) {
-  newImagePreview.innerHTML = '';
-  const files = Array.from(this.files);
-  
-  if (files.length === 0) return;
-  
-  files.forEach((file, index) => {
-    if (file.type.startsWith('image/')) {
-      const reader = new FileReader();
-      
-      reader.onload = function(e) {
-        const previewItem = document.createElement('div');
-        previewItem.className = 'image-preview-item';
-        previewItem.innerHTML = `
-          <img src="${e.target.result}" alt="Preview ${index}">
-          <button type="button" class="remove-btn" onclick="removeNewImage(this)">×</button>
-        `;
-        newImagePreview.appendChild(previewItem);
-      };
-      
-      reader.readAsDataURL(file);
-    }
-  });
-});
-
-function removeNewImage(btn) {
-  btn.closest('.image-preview-item').remove();
-}
-</script>

@@ -4,6 +4,7 @@ const express = require("express");
 const path = require("path");
 const engine = require("ejs-mate");
 const session = require("express-session");
+const MongoStore = require("connect-mongo");
 const methodOverride = require("method-override");
 
 // =============================
@@ -21,6 +22,10 @@ const bookingRoutes = require("./routes/bookingRoutes");
 // App Initialize
 // =============================
 const app = express();
+const isProduction = process.env.NODE_ENV === "production";
+const mongoSessionUrl = process.env.MONGO_URI || process.env.MONGO_URL;
+
+// const dbUrl = process.env.MONGO_URL;
 
 // =============================
 // Database Connect
@@ -45,11 +50,32 @@ app.use(express.static(path.join(__dirname, "public")));
 // =============================
 // Session Setup
 // =============================
+if (isProduction) {
+  app.set("trust proxy", 1);
+}
+
+if (!mongoSessionUrl) {
+  throw new Error("Missing MongoDB session connection string. Set MONGO_URI in your environment.");
+}
+
 app.use(
   session({
     secret: process.env.SESSION_SECRET || "divineSecretKey",
+    name: "divine.sid",
     resave: false,
     saveUninitialized: false,
+    store: MongoStore.create({
+      mongoUrl: mongoSessionUrl,
+      collectionName: "sessions",
+      ttl: 14 * 24 * 60 * 60,
+      autoRemove: "native"
+    }),
+    cookie: {
+      httpOnly: true,
+      secure: isProduction,
+      sameSite: "lax",
+      maxAge: 14 * 24 * 60 * 60 * 1000
+    }
   })
 );
 
