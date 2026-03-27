@@ -1,35 +1,45 @@
-<nav class="navbar-divine">
-  <div class="container-fluid">
-    <div class="navbar-content">
-      <div class="navbar-brand">
-        <a href="/" class="logo-link">
-          <span class="logo-icon">✈️</span>
-          <span class="logo-text">Divine Destination</span>
-        </a>
-      </div>
+<nav class="navbar navbar-expand-lg navbar-divine fixed-top">
+  <div class="container">
+    <a href="/" class="navbar-brand logo-link">
+      <span class="logo-icon">DD</span>
+      <span class="logo-text">Divine Destination</span>
+    </a>
 
-      <div class="navbar-menu" id="navbarMenu">
-        <a href="/" class="nav-link">Home</a>
-        <a href="/listings" class="nav-link">Explore</a>
+    <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMenu" aria-controls="navbarMenu" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon-custom"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarMenu">
+      <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-2">
+        <li class="nav-item">
+          <a href="/" class="nav-link">Home</a>
+        </li>
+        <li class="nav-item">
+          <a href="/listings" class="nav-link">Explore</a>
+        </li>
 
         <% if (!currentUser) { %>
-          <a href="/login" class="nav-link">Login</a>
-          <a href="/register" class="nav-link nav-register">Register</a>
+          <li class="nav-item">
+            <a href="/login" class="nav-link">Login</a>
+          </li>
+          <li class="nav-item">
+            <a href="/register" class="nav-link nav-pill nav-register">Register</a>
+          </li>
         <% } else { %>
           <% if (currentUser.role === "admin") { %>
-            <a href="/listings/new" class="nav-link">Add Listing</a>
+            <li class="nav-item">
+              <a href="/listings/new" class="nav-link">Add Listing</a>
+            </li>
           <% } else { %>
-            <a href="/bookings" class="nav-link">My Bookings</a>
+            <li class="nav-item">
+              <a href="/bookings" class="nav-link">My Bookings</a>
+            </li>
           <% } %>
-          <a href="/logout" class="nav-link nav-logout">Logout</a>
+          <li class="nav-item">
+            <a href="/logout" class="nav-link nav-pill nav-logout">Logout</a>
+          </li>
         <% } %>
-      </div>
-
-      <button class="mobile-menu-toggle" id="mobileMenuToggle" type="button" aria-label="Toggle navigation" aria-expanded="false" aria-controls="navbarMenu">
-        <span class="hamburger-line"></span>
-        <span class="hamburger-line"></span>
-        <span class="hamburger-line"></span>
-      </button>
+      </ul>
     </div>
   </div>
 </nav>
@@ -49,3 +59,4 @@
     </div>
   <% } %>
 </div>
+

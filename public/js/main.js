@@ -37,7 +37,7 @@ function initPasswordToggles() {
 
       const isHidden = input.type === "password";
       input.type = isHidden ? "text" : "password";
-      toggle.textContent = isHidden ? "🙈" : "👁️";
+      toggle.textContent = isHidden ? "Hide" : "Show";
       toggle.setAttribute("aria-label", isHidden ? "Hide password" : "Show password");
       toggle.setAttribute("aria-pressed", String(isHidden));
     };
@@ -53,31 +53,20 @@ function initPasswordToggles() {
 }
 
 function initNavbarMenu() {
-  const toggle = document.getElementById("mobileMenuToggle");
   const menu = document.getElementById("navbarMenu");
   const navbar = document.querySelector(".navbar-divine");
 
-  if (toggle && menu) {
-    const closeMenu = () => {
-      menu.classList.remove("active");
-      toggle.classList.remove("active");
-      toggle.setAttribute("aria-expanded", "false");
-    };
-
-    toggle.addEventListener("click", () => {
-      const isActive = menu.classList.toggle("active");
-      toggle.classList.toggle("active", isActive);
-      toggle.setAttribute("aria-expanded", String(isActive));
+  if (menu && window.bootstrap?.Collapse) {
+    const bsCollapse = bootstrap.Collapse.getOrCreateInstance(menu, {
+      toggle: false
     });
 
     menu.querySelectorAll(".nav-link").forEach(link => {
-      link.addEventListener("click", closeMenu);
-    });
-
-    window.addEventListener("resize", () => {
-      if (window.innerWidth >= 768) {
-        closeMenu();
-      }
+      link.addEventListener("click", () => {
+        if (window.innerWidth < 992 && menu.classList.contains("show")) {
+          bsCollapse.hide();
+        }
+      });
     });
   }
 
