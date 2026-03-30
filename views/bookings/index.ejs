@@ -1,58 +1,80 @@
 <% layout("layouts/boilerplate") %>
 
 <div class="container mt-5">
+  <h2 class="mb-4">My Bookings</h2>
 
-<h2 class="mb-4">My Bookings</h2>
+  <% if (bookings.length === 0) { %>
+    <p>No bookings yet.</p>
+  <% } else { %>
+    <div class="row">
+      <% bookings.forEach((b) => { %>
+        <%
+          const bookingListing = b.listing || null;
+          const isOwner = String(b.user?._id || b.user || "") === String(currentUser?.id || "");
+          const isCancelled = b.status === "cancelled";
+        %>
 
-<% if(bookings.length === 0){ %>
+        <div class="col-md-4 mb-4">
+          <div class="card shadow-sm h-100">
+            <% if (bookingListing?.image) { %>
+              <img
+                src="<%= bookingListing.image %>"
+                alt="Booking image"
+                class="card-img-top"
+                style="height: 200px; object-fit: cover;"
+              >
+            <% } else if (bookingListing?.images?.[0]?.url) { %>
+              <img
+                src="<%= bookingListing.images[0].url %>"
+                alt="Booking image"
+                class="card-img-top"
+                style="height: 200px; object-fit: cover;"
+              >
+            <% } else { %>
+              <p class="p-3 mb-0">Listing unavailable</p>
+            <% } %>
 
-  <p>No bookings yet 😔</p>
+            <div class="card-body d-flex flex-column">
+              <h5 class="card-title">
+                <%= bookingListing ? bookingListing.title : "Listing unavailable" %>
+              </h5>
 
-<% } else { %>
+              <p><strong>Name:</strong> <%= b.name %></p>
+              <p><strong>Phone:</strong> <%= b.phone %></p>
+              <p><strong>Seats:</strong> <%= b.seats %></p>
+              <p><strong>Travel Date:</strong> <%= new Date(b.travelDate).toDateString() %></p>
+              <p><strong>Booking Date:</strong> <%= new Date(b.bookingDate || b.createdAt).toDateString() %></p>
+              <p>
+                <strong>Status:</strong>
+                <span class="badge <%= isCancelled ? 'bg-danger' : 'bg-success' %>">
+                  <%= b.status || "confirmed" %>
+                </span>
+              </p>
+              <p><strong>Total Price:</strong> Rs. <%= b.totalPrice || 0 %></p>
 
-  <div class="row">
+              <% if (isCancelled) { %>
+                <p class="text-success mb-3"><strong>Refund Amount:</strong> Rs. <%= b.refundAmount || 0 %></p>
+              <% } %>
 
-    <% bookings.forEach(b => { %>
-      <% 
-        const bookingListing = b.listing || null;
-        const bookingImage = bookingListing && Array.isArray(bookingListing.images) && bookingListing.images.length > 0
-          ? (typeof bookingListing.images[0] === "string" ? bookingListing.images[0] : bookingListing.images[0].url)
-          : "https://via.placeholder.com/400x250?text=No+Image";
-      %>
+              <div class="mt-auto d-flex flex-wrap gap-2">
+                <% if (isOwner && !isCancelled) { %>
+                  <a href="/bookings/<%= b._id %>/edit" class="btn btn-outline-primary btn-sm">Edit</a>
 
-      <div class="col-md-4 mb-4">
-        <div class="card shadow-sm">
+                  <form action="/bookings/<%= b._id %>/cancel" method="POST" class="d-inline">
+                    <button type="submit" class="btn btn-outline-danger btn-sm">Cancel Booking</button>
+                  </form>
+                <% } %>
 
-          <img 
-            src="<%= bookingImage %>" 
-            alt="<%= bookingListing ? bookingListing.title : 'Booking image' %>"
-            class="card-img-top"
-            style="height:200px; object-fit:cover;"
-          >
-
-          <div class="card-body">
-
-            <h5 class="card-title">
-              <%= bookingListing ? bookingListing.title : "Listing unavailable" %>
-            </h5>
-
-            <p>👤 <strong>Name:</strong> <%= b.name %></p>
-            <p>📞 <strong>Phone:</strong> <%= b.phone %></p>
-            <p>👥 <strong>Seats:</strong> <%= b.seats %></p>
-
-            <p>📅 <strong>Date:</strong> 
-              <%= new Date(b.travelDate).toDateString() %>
-            </p>
-
+                <% if (bookingListing && bookingListing.phone) { %>
+                  <a href="tel:<%= bookingListing.phone %>" class="btn btn-outline-dark btn-sm">Call for Inquiry</a>
+                <% } else { %>
+                  <a href="tel:+910000000000" class="btn btn-outline-dark btn-sm">Call for Inquiry</a>
+                <% } %>
+              </div>
+            </div>
           </div>
-
         </div>
-      </div>
-
-    <% }) %>
-
-  </div>
-
-<% } %>
-
+      <% }) %>
+    </div>
+  <% } %>
 </div>

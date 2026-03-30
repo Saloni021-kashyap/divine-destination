@@ -28,6 +28,21 @@ const userSchema = new mongoose.Schema(
     enum: ["user", "admin"],
     default: "user",
   },
+
+  lastLoginAt: {
+    type: Date,
+    default: null
+  },
+
+  lastLoginIp: {
+    type: String,
+    default: null
+  },
+
+  lastLoginUserAgent: {
+    type: String,
+    default: null
+  },
 },
 { timestamps: true }
 );

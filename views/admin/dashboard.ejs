@@ -1,70 +1,88 @@
 <% layout("layouts/boilerplate") %>
 
-<div class="container mt-5">
-
-<h2 class="mb-4">Admin Dashboard 🚀</h2>
-
-<div class="row">
-
-<div class="col-md-4">
-<div class="card shadow p-3">
-<h5>Total Listings</h5>
-<h2><%= totalListings %></h2>
-</div>
-</div>
-
-<div class="col-md-4">
-<div class="card shadow p-3">
-<h5>Total Users</h5>
-<h2><%= totalUsers %></h2>
-</div>
-</div>
-
-<div class="col-md-4">
-<div class="card shadow p-3">
-<h5>Total Bookings</h5>
-<h2><%= totalBookings %></h2>
-</div>
-</div>
-
-<div class="col-md-4 mt-4">
-<div class="card shadow p-3">
-<h5>Manage Listings</h5>
-<a href="/listings" class="btn btn-primary mt-2">
-View Listings
-</a>
-</div>
-</div>
-
-</div>
-
-<br>
-
-<div class="mt-4">
-<h3 class="mb-3">Recent Bookings</h3>
-
-<% if (!bookings || bookings.length === 0) { %>
-  <div class="card shadow-sm p-3">
-    <p class="mb-0">No bookings found.</p>
+<div class="container mt-5 mb-5">
+  <div class="mb-4 pb-3 border-bottom">
+    <h2 class="mb-1">Admin Dashboard</h2>
+    <p class="text-muted mb-0">
+      Last login:
+      <strong><%= lastLoginAt ? new Date(lastLoginAt).toLocaleString() : "N/A" %></strong>
+    </p>
   </div>
-<% } else { %>
-  <div class="row g-3">
-    <% bookings.forEach(booking => { %>
-      <div class="col-md-6">
-        <div class="card shadow-sm p-3 h-100">
-          <p class="mb-2"><strong>User:</strong> <%= booking.user && booking.user.name ? booking.user.name : "Unknown user" %></p>
-          <p class="mb-2"><strong>Email:</strong> <%= booking.user && booking.user.email ? booking.user.email : "N/A" %></p>
-          <p class="mb-2"><strong>Package:</strong> <%= booking.listing && booking.listing.title ? booking.listing.title : "Listing unavailable" %></p>
-          <p class="mb-2"><strong>Travel Date:</strong> <%= booking.travelDate ? new Date(booking.travelDate).toDateString() : "N/A" %></p>
-          <p class="mb-2"><strong>Persons:</strong> <%= booking.seats || 0 %></p>
-          <p class="mb-0"><strong>Phone:</strong> <%= booking.phone || "N/A" %></p>
+
+  <div class="row g-4">
+    <div class="col-md-3">
+      <div class="card shadow-sm h-100 border-0">
+        <div class="card-body p-4">
+          <h6 class="text-muted text-uppercase mb-2">Total Listings</h6>
+          <h3 class="mb-0"><%= totalListings %></h3>
         </div>
       </div>
-    <% }) %>
+    </div>
+
+    <div class="col-md-3">
+      <div class="card shadow-sm h-100 border-0">
+        <div class="card-body p-4">
+          <h6 class="text-muted text-uppercase mb-2">Total Users</h6>
+          <h3 class="mb-0"><%= totalUsers %></h3>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <div class="card shadow-sm h-100 border-0">
+        <div class="card-body p-4">
+          <h6 class="text-muted text-uppercase mb-2">Total Bookings</h6>
+          <h3 class="mb-0"><%= totalBookings %></h3>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <div class="card shadow-sm h-100 border-0">
+        <div class="card-body p-4">
+          <h6 class="text-muted text-uppercase mb-2">Active Users</h6>
+          <h3 class="mb-0"><%= activeUsers %></h3>
+        </div>
+      </div>
+    </div>
   </div>
-<% } %>
-</div>
 
-<a href="/logout" class="btn btn-danger">Logout</a>
+  <div class="card shadow-sm mt-4">
+    <div class="card-body d-flex justify-content-between align-items-center">
+      <div>
+        <h5 class="mb-1">Manage Listings</h5>
+        <p class="text-muted mb-0">Review and update travel packages.</p>
+      </div>
+      <a href="/listings" class="btn btn-primary">View Listings</a>
+    </div>
+  </div>
 
+  <div class="mt-5">
+    <h3 class="mb-3">Recent Bookings</h3>
+
+    <% if (!bookings || bookings.length === 0) { %>
+      <div class="card shadow-sm border-0">
+        <div class="card-body p-4">
+          <p class="mb-0">No bookings found.</p>
+        </div>
+      </div>
+    <% } else { %>
+      <div class="row g-4">
+        <% bookings.forEach(booking => { %>
+          <div class="col-md-6">
+            <div class="card shadow-sm border-0 h-100">
+              <div class="card-body p-4">
+                <p class="mb-2"><strong>User:</strong> <%= booking.user && booking.user.name ? booking.user.name : "Unknown user" %></p>
+                <p class="mb-2"><strong>Email:</strong> <%= booking.user && booking.user.email ? booking.user.email : "N/A" %></p>
+                <p class="mb-2"><strong>Package:</strong> <%= booking.listing && booking.listing.title ? booking.listing.title : "Listing unavailable" %></p>
+                <p class="mb-2"><strong>Travel Date:</strong> <%= booking.travelDate ? new Date(booking.travelDate).toDateString() : "N/A" %></p>
+                <p class="mb-2"><strong>Persons:</strong> <%= booking.seats || 0 %></p>
+                <p class="mb-0"><strong>Phone:</strong> <%= booking.phone || "N/A" %></p>
+              </div>
+            </div>
+          </div>
+        <% }) %>
+      </div>
+    <% } %>
+  </div>
 </div>

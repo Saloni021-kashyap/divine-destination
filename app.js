@@ -9,17 +9,21 @@ const engine = require("ejs-mate");
 const session = require("express-session");
 const MongoStore = require("connect-mongo");
 const methodOverride = require("method-override");
+const helmet = require("helmet");
+const rateLimit = require("express-rate-limit");
 
 // =============================
 // Custom Files
 // =============================
 const connectDB = require("./config/db");
 const Listing = require("./models/Listing");
+const Booking = require("./models/Booking");
 
 const authRoutes = require("./routes/authRoutes");
 const adminRoutes = require("./routes/adminRoutes");
 const listingRoutes = require("./routes/listingRoutes");
 const bookingRoutes = require("./routes/bookingRoutes");
+const suspiciousActivityLogger = require("./middleware/suspiciousActivityLogger");
 
 // =============================
 // App Initialize
@@ -45,6 +49,30 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(methodOverride("_method"));
 app.use(express.static(path.join(__dirname, "public")));
+app.use(
+  helmet({
+    contentSecurityPolicy: false,
+    crossOriginEmbedderPolicy: false
+  })
+);
+
+const globalLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 200,
+  standardHeaders: true,
+  legacyHeaders: false
+});
+
+const loginLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 20,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: "Too many login attempts. Please try again later."
+});
+
+app.use(globalLimiter);
+app.use("/login", loginLimiter);
 
 // =============================
 // Session Setup
@@ -103,6 +131,8 @@ app.use((req, res, next) => {
   next();
 });
 
+app.use(suspiciousActivityLogger);
+
 // =============================
 // Routes
 // =============================
@@ -117,7 +147,7 @@ app.use("/admin", adminRoutes);
 app.get("/", async (req, res) => {
   try {
     const listings = await Listing.find().limit(30);
-    return res.render("listings/index", { listings });
+    return res.render("index", { listings });
   } catch (err) {
     console.error("Home Route Error:", err.message);
     res.status(500).send("Server Error");
@@ -158,6 +188,9 @@ process.on("uncaughtException", err => {
 const startServer = async () => {
   try {
     await connectDB();
+    await Booking.deleteMany({ listing: null });
+    console.log("Orphan bookings cleanup completed");
+
     server = app.listen(PORT, () => {
       console.log(`Server running on port ${PORT}`);
     });

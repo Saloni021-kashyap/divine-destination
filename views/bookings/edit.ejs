@@ -1,0 +1,76 @@
+<% layout("layouts/boilerplate") %>
+
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-6">
+      <div class="card shadow-sm border-0">
+        <div class="card-body p-4">
+          <h2 class="mb-3">Edit Booking</h2>
+          <p class="text-muted mb-4">
+            <strong><%= booking.listing ? booking.listing.title : "Booking" %></strong> on
+            <%= new Date(booking.travelDate).toDateString() %>
+          </p>
+
+          <form action="/bookings/<%= booking._id %>?_method=PUT" method="POST" id="edit-booking-form">
+            <div class="mb-3">
+              <label for="phone" class="form-label">Phone Number</label>
+              <input
+                type="text"
+                id="phone"
+                name="phone"
+                class="form-control"
+                value="<%= booking.phone %>"
+                required
+              >
+            </div>
+
+            <div class="mb-3">
+              <label for="seats" class="form-label">Number of Seats</label>
+              <input
+                type="number"
+                id="seats"
+                name="seats"
+                class="form-control"
+                min="1"
+                max="<%= booking.seats + (booking.listing ? booking.listing.availableSeats : 0) %>"
+                value="<%= booking.seats %>"
+                data-price="<%= booking.listing ? booking.listing.price : 0 %>"
+                required
+              >
+            </div>
+
+            <div class="alert alert-info">
+              Total Price: <strong id="total-price">Rs. <%= booking.totalPrice %></strong>
+            </div>
+
+            <div class="d-flex gap-2">
+              <button type="submit" class="btn btn-primary">Save Changes</button>
+              <a href="/bookings" class="btn btn-outline-secondary">Back</a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const seatsInput = document.getElementById("seats");
+    const totalPriceEl = document.getElementById("total-price");
+
+    if (!seatsInput || !totalPriceEl) {
+      return;
+    }
+
+    const pricePerSeat = Number(seatsInput.dataset.price || 0);
+
+    const updateTotalPrice = function () {
+      const seats = Number(seatsInput.value || 0);
+      totalPriceEl.textContent = "Rs. " + (seats * pricePerSeat);
+    };
+
+    seatsInput.addEventListener("input", updateTotalPrice);
+    updateTotalPrice();
+  });
+</script>

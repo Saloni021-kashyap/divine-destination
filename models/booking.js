@@ -26,6 +26,25 @@ const bookingSchema = new mongoose.Schema({
     required: true,
     min: 1
   },
+  totalPrice: {
+    type: Number,
+    required: true,
+    min: 0
+  },
+  status: {
+    type: String,
+    enum: ["confirmed", "cancelled"],
+    default: "confirmed"
+  },
+  refundAmount: {
+    type: Number,
+    default: 0,
+    min: 0
+  },
+  bookingDate: {
+    type: Date,
+    default: Date.now
+  },
   travelDate: {
     type: Date,
     required: true

@@ -1,5 +1,5 @@
 const Listing = require("../models/Listing");
-const Booking = require("../models/booking");
+const Booking = require("../models/Booking");
 
 // =============================
 // Constants & Helpers
@@ -287,6 +287,9 @@ exports.deleteListing = async (req, res) => {
   try {
     const { id } = req.params;
 
+    await Booking.deleteMany({ listing: id });
+    console.log("Related bookings deleted");
+
     const listing = await Listing.findByIdAndDelete(id);
 
     if (!listing) {
@@ -383,6 +386,8 @@ exports.bookSeat = async (req, res) => {
       name: req.body.name,
       phone: req.body.phone,
       seats: seats,
+      totalPrice: seats * listing.price,
+      bookingDate: new Date(),
       travelDate: travelDate
     });
     req.session.success = "Booking successful";
