@@ -1,6 +1,6 @@
 const Listing = require("../models/Listing");
 const User = require("../models/User");
-const Booking = require("../models/Booking");
+const Booking = require("../models/booking");
 const mongoose = require("mongoose");
 
 const getActiveUsersCount = async () => {

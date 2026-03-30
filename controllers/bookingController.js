@@ -1,4 +1,4 @@
-const Booking = require("../models/Booking");
+const Booking = require("../models/booking");
 const Listing = require("../models/Listing");
 
 const CANCELLATION_WINDOW_DAYS = 14;

@@ -17,7 +17,7 @@ const rateLimit = require("express-rate-limit");
 // =============================
 const connectDB = require("./config/db");
 const Listing = require("./models/Listing");
-const Booking = require("./models/Booking");
+const Booking = require("./models/booking");
 
 const authRoutes = require("./routes/authRoutes");
 const adminRoutes = require("./routes/adminRoutes");
